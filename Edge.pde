@@ -1,7 +1,7 @@
 
 class Edge {
-  private Node lineStartNode;
-  private Node lineEndNode;
+  private PVector lineStartPosition;
+  private PVector lineEndPosition;
 
   private PVector lineLength;
   private PVector lineCurrentEndPosition;
@@ -9,21 +9,22 @@ class Edge {
   private float lineLengthFactor = 0f;
   private boolean lineComplete = false;
   private boolean haveChildren = false;
-
-  private color strokeC = color(5, 150, 220);
-  private int strokeW = 2;
-  private int strokeA = 255;
-
-  public Edge(Node start, Node end) {
-    lineStartNode = start;
-    lineEndNode = end;
-    lineLength = PVector.sub(lineEndNode.getPosition(), lineStartNode.getPosition());
-    lineCurrentEndPosition = PVector.mult(lineLength, lineLengthFactor);
-    lineCurrentEndPosition.add(lineStartNode.getPosition());
+   
+  public Edge() {
+    this(new PVector((float)Math.random() * width, (float) Math.random() * height));
   }
 
-  public Node getLineEndNode() {
-    return lineEndNode;
+  public Edge(PVector _lineStartPosition) {
+    lineStartPosition = _lineStartPosition;
+    lineEndPosition = new PVector((float)Math.random() * width, (float) Math.random() * height);
+
+    lineLength = PVector.sub(lineEndPosition, lineStartPosition);
+    lineCurrentEndPosition = PVector.mult(lineLength, lineLengthFactor);
+    lineCurrentEndPosition.add(lineStartPosition);
+  }
+
+  public PVector getLineEndPosition() {
+    return lineEndPosition;
   }
 
   public boolean isLineComplete() {
@@ -43,19 +44,28 @@ class Edge {
       return;
     }
 
-    lineLengthFactor += 0.008;
+    lineLengthFactor += 0.01;
     if (lineLengthFactor > 1f) {
       lineLengthFactor = 1f;
       lineComplete = true;
     }
 
     lineCurrentEndPosition = PVector.mult(lineLength, lineLengthFactor);
-    lineCurrentEndPosition.add(lineStartNode.getPosition());
+    lineCurrentEndPosition.add(lineStartPosition);
   }
 
   public void draw() {
-    strokeWeight(strokeW); 
-    stroke(strokeC, strokeA);
-    line(lineStartNode.getPosition().x, lineStartNode.getPosition().y, lineCurrentEndPosition.x, lineCurrentEndPosition.y);
+    //noStroke();
+    //fill(color(100, 200, 220));
+    //circle(lineStartPosition.x, lineStartPosition.y, 5);
+
+    //noStroke();
+    //fill(color(220, 100, 100));
+    //circle(lineEndPosition.x, lineEndPosition.y, 5);
+
+
+    strokeWeight(1); 
+    stroke(color(5, 150, 220));
+    line(lineStartPosition.x, lineStartPosition.y, lineCurrentEndPosition.x, lineCurrentEndPosition.y);
   }
 }

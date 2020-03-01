@@ -1,58 +1,46 @@
 
 class Tree {
-  private ArrayList<Node> nodes;
-  private ArrayList<Edge> edges;
+  private ArrayList<Edge> incompleteEdges;
+  private ArrayList<Edge> completeEdges;
 
   public Tree() {
-    nodes = new ArrayList<Node>();
-    edges = new ArrayList<Edge>();
+    incompleteEdges = new ArrayList<Edge>();
+    completeEdges = new ArrayList<Edge>();
 
-    Node rootNode = new Node();
-    Node firstNode = new Node();
-
-    nodes.add(rootNode);
-    nodes.add(firstNode);
-
-    edges.add(new Edge(rootNode, firstNode));
+    incompleteEdges.add(new Edge());
   }
 
   public void update() {
-    for (Edge e : edges) {
+    for (int i=incompleteEdges.size()-1; i>=0; i--) {
+      Edge e = incompleteEdges.get(i);
       e.update();
-    }
 
-    for (int i=edges.size()-1; i>=0; i--) {
-      Edge e = edges.get(i);
-
-      if (!e.isLineComplete()) {
+      if (e.isLineComplete()) {
+        completeEdges.add(e);
+        incompleteEdges.remove(e);
+      } else {
         continue;
       }
 
       if (e.isHaveChildren()) {
         continue;
+      } else {
+        PVector newLineStartPosition = e.getLineEndPosition();
+
+        int numberOfNewEdges = (int) random(2, 4);
+        for (int j=0; j<numberOfNewEdges; j++) {
+          incompleteEdges.add(new Edge(newLineStartPosition));
+        }
+        e.setHaveChildren(true);
       }
-
-      Node newLineStartNode = e.getLineEndNode();
-
-      int numberOfNewNodes = (int) random(2, 4);
-      for (int j=0; j<numberOfNewNodes; j++) {
-        Node newLineEndNode = new Node();
-        nodes.add(newLineEndNode);
-        edges.add(new Edge(newLineStartNode, newLineEndNode));
-      }
-      e.setHaveChildren(true);
-    }
-
-    for (int i=0; i<edges.size(); i++) {
     }
   }
 
   public void draw() {
-    for (Node n : nodes) {
-      n.draw();
-    }
-
-    for (Edge e : edges) {
+    //for (Edge e : completeEdges) {
+    //  e.draw();
+    //}
+    for (Edge e : incompleteEdges) {
       e.draw();
     }
   }

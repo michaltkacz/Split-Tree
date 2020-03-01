@@ -1,13 +1,14 @@
 Tree tree;
 
 void setup() {
-  size(2000, 1000);
-  background(230);  
-
+  size(2000, 800);
+  background(250);  
+  noSmooth();
   tree = new Tree();
 }
 
-void draw() {  
+void draw() {
+  //background(250);
   tree.update();
   tree.draw();
 }
